@@ -35,7 +35,7 @@ class CardsHelper
         $size_cards = count($cards_available);
         while($i < $size_cards){
             $temp_assigned = !empty($cards_assigned[$player_index]) ? $cards_assigned[$player_index] : "";
-            $cards_assigned[$player_index] = $temp_assigned.$cards_available[$i].",";
+            $cards_assigned[$player_index] = $temp_assigned.",".$cards_available[$i];
             // increment the index for the next player
             $player_index++;
             // reset if the assignment already reached the end of the last player

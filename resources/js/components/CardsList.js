@@ -25,7 +25,7 @@ class CardsList extends Component {
         <div className='row justify-content-center'>
           <div className='col-md-8'>
             <div className='card'>
-              <div className='card-header'>All cards assigned</div>
+              <div className='card-header'>All Cards Assignment</div>
               <div className='card-body'>
                 <Link className='btn btn-primary btn-sm mb-3' to='/create'>
                   Assign new cards

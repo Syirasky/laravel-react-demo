@@ -36,19 +36,23 @@ class CardsController extends Controller
         ]);
         
         // only for valid player count
-        if($validated_request['player_count'] > 0 && !empty($validated_request['player_count'])){
+        if( !is_numeric($validated_request['player_count']) || ($validated_request['player_count'] > 0 && !empty($validated_request['player_count']))){
             $assigned_cards = CardsHelper::assign($validated_request['player_count']);
             try{
+                $remarks = $request->input('remarks','');
                 $assigned_cards = json_encode($assigned_cards);
                 $card = cards::create([
                     'player_count' => $validated_request['player_count'],
                     'assigned_cards' => $assigned_cards,
+                    'remarks' => $remarks
                 ]);
-                return response()->json('Succesfully saved!');
+                return $card->toJson();
             }catch(\Exception $e){
                 Log::info($e->getMessage());
                 return response()->json(['message'=>'Error saving data'],500);
             }
+        }else{
+            return response()->json(['message'=>'Must be valid player count'],500);
         }
         
     }
@@ -61,9 +65,13 @@ class CardsController extends Controller
      */
     public function show($id)
     {
-        $cards = cards::find($id);
+        $cards = cards::find($id)->orderBy('id','DESC')->first();
         if(!empty($cards)){
-            return $cards->toJson();
+            $result['id'] = $cards['id'];
+            $result['player_count'] = $cards['player_count'];
+            $result['assigned_cards'] = json_decode($cards['assigned_cards']);
+            $result['remarks'] = $cards['remarks'];
+            return $result;
         }else{
             return response()->json(['message'=>'Data not found'],404);
         }
